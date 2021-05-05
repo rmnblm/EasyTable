@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol EasyCellDelegate: class {
+protocol EasyCellDelegate: AnyObject {
     func easyCell(_ cell: EasyCellView, didToggleSwitch isOn: Bool)
     func easyCell(_ cell: EasyCellView, didEndEditingTextField value: String?)
 }

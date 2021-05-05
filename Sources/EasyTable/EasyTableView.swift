@@ -2,10 +2,20 @@
 
 import UIKit
 
-public class EasyTableView: UIView {
+open class EasyTableView: UIView {
 
-    public var sections: [EasySection] = [] {
+    open var sections: [EasySection] = [] {
         didSet { tableView.reloadData() }
+    }
+    
+    open var tableHeaderView: UIView? {
+        get { tableView.tableHeaderView }
+        set { tableView.tableHeaderView = newValue }
+    }
+    
+    open var tableFooterView: UIView? {
+        get { tableView.tableFooterView }
+        set { tableView.tableFooterView = newValue }
     }
 
     private let style: UITableView.Style
