@@ -13,13 +13,23 @@ public class EasyCellView: UITableViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            label.textColor = .label
+        }
+        else {
+            label.textColor = .black
+        }
         return label
     }()
 
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .secondaryLabel
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            label.textColor = .secondaryLabel
+        }
+        else {
+            label.textColor = .gray
+        }
         return label
     }()
 
@@ -50,10 +60,10 @@ public class EasyCellView: UITableViewCell {
         let imageView = UIImageView()
         return imageView
     }()
-
-    private lazy var switchControl: UISwitch = {
-        let control = UISwitch()
-        control.addTarget(self, action: #selector(didToggleSwitch), for: .valueChanged)
+    
+    public lazy var switchControl: EasyTableSwitchControl = {
+        let control = DefaultSwitchControl()
+        control.didToggleSwitch = didToggleSwitch
         return control
     }()
 
@@ -99,30 +109,11 @@ public class EasyCellView: UITableViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
-        accessoryType = .none
-        accessoryView = nil
-        selectionStyle = .default
-
-        stackView.isHidden = false
-        stackView.axis = .horizontal
-
-        iconImageView.image = nil
-        iconImageView.highlightedImage = nil
-
-        titleLabel.text = nil
-        subtitleLabel.text = nil
-
-        tapTitleLabel.text = nil
-        tapTitleLabel.isHidden = true
-
-        textField.removeFromSuperview()
-
-        stackViewTrailingConstraint?.constant = 0
-        stackViewLeadingToIconConstraint?.isActive = false
-        stackViewLeadingToContentConstraint?.isActive = true
+        resetCell()
     }
 
     func setRow(_ row: EasyRow) {
+        resetCell()
 
         if let icon = row.icon {
             iconImageView.image = icon.image
@@ -134,6 +125,7 @@ public class EasyCellView: UITableViewCell {
         switch row.style {
         case .title(let title):
             titleLabel.text = title
+            subtitleLabel.isHidden = true
         case .value(let title, let subtitle):
             titleLabel.text = title
             subtitleLabel.text = subtitle
@@ -141,12 +133,16 @@ public class EasyCellView: UITableViewCell {
             stackView.axis = .vertical
             titleLabel.text = title
             subtitleLabel.text = subtitle
+            if subtitle == nil {
+                subtitleLabel.isHidden = true
+            }
         case .button(let title):
             stackView.isHidden = true
             tapTitleLabel.isHidden = false
             tapTitleLabel.text = title
             selectionStyle = .none
-        case .userInput(let value, let placeholder, _):
+        case .userInput(let title, let value, let placeholder, _):
+            titleLabel.text = title
             stackView.addArrangedSubview(textField)
             textField.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.5).isActive = true
             textField.placeholder = placeholder
@@ -167,9 +163,34 @@ public class EasyCellView: UITableViewCell {
             stackViewTrailingConstraint?.constant = -32
         }
     }
+    
+    private func resetCell() {
+        accessoryType = .none
+        accessoryView = nil
+        selectionStyle = .default
 
-    @objc private func didToggleSwitch(_ sender: UISwitch) {
-        delegate?.easyCell(self, didToggleSwitch: sender.isOn)
+        stackView.isHidden = false
+        stackView.axis = .horizontal
+
+        iconImageView.image = nil
+        iconImageView.highlightedImage = nil
+
+        titleLabel.text = nil
+        subtitleLabel.text = nil
+        subtitleLabel.isHidden = false
+
+        tapTitleLabel.text = nil
+        tapTitleLabel.isHidden = true
+
+        textField.removeFromSuperview()
+
+        stackViewTrailingConstraint?.constant = 0
+        stackViewLeadingToIconConstraint?.isActive = false
+        stackViewLeadingToContentConstraint?.isActive = true
+    }
+
+    private func didToggleSwitch() {
+        delegate?.easyCell(self, didToggleSwitch: switchControl.isOn)
     }
 
     @objc private func didTriggerPrimaryActionInTextField(_ textField: UITextField) {

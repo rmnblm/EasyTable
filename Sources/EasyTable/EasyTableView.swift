@@ -2,18 +2,18 @@
 
 import UIKit
 
-open class EasyTableView: UIView {
+public class EasyTableView: UIView {
 
-    open var sections: [EasySection] = [] {
+    public var sections: [EasySection] = [] {
         didSet { tableView.reloadData() }
     }
     
-    open var tableHeaderView: UIView? {
+    public var tableHeaderView: UIView? {
         get { tableView.tableHeaderView }
         set { tableView.tableHeaderView = newValue }
     }
     
-    open var tableFooterView: UIView? {
+    public var tableFooterView: UIView? {
         get { tableView.tableFooterView }
         set { tableView.tableFooterView = newValue }
     }
@@ -28,11 +28,27 @@ open class EasyTableView: UIView {
         tableView.register(EasyCellHostView.self, forCellReuseIdentifier: "EasyCellHostView")
         return tableView
     }()
-
-    public init(style: UITableView.Style = .insetGrouped) {
+    
+    public init(style: UITableView.Style = .grouped) {
         self.style = style
         super.init(frame: .zero)
+        setupView()
+        #if os(iOS)
+        setupObservers()
+        #endif
+    }
 
+    required public init?(coder: NSCoder) { nil }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    public func reloadData() {
+        tableView.reloadData()
+    }
+    
+    private func setupView() {
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -41,19 +57,16 @@ open class EasyTableView: UIView {
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
             tableView.topAnchor.constraint(equalTo: topAnchor)
         ])
-
+    }
+    
+    #if os(iOS)
+    private func setupObservers() {
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardDidShowNotification, object: nil
         )
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardDidHideNotification, object: nil
         )
-    }
-
-    required public init?(coder: NSCoder) { nil }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -65,6 +78,7 @@ open class EasyTableView: UIView {
     @objc private func keyboardWillHide(notification: NSNotification) {
         UIView.animate(withDuration: 0.2) { self.tableView.contentInset = .zero }
     }
+    #endif
 }
 
 extension EasyTableView: EasyCellDelegate {
@@ -80,9 +94,9 @@ extension EasyTableView: EasyCellDelegate {
     public func easyCell(_ cell: EasyCellView, didEndEditingTextField value: String?) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let row = sections[indexPath.section].rows[indexPath.row]
-        if case let .userInput(_, placeholder, action) = row.style {
+        if case let .userInput(title, _, placeholder, action) = row.style {
             action(value)
-            row.style = .userInput(value: value, placeholder: placeholder, action)
+            row.style = .userInput(title:  title, value: value, placeholder: placeholder, action)
         }
     }
 }

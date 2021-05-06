@@ -5,8 +5,13 @@ import UIKit
 public class EasyRow {
 
     public struct Icon {
-        public var image: UIImage?
-        public var highlightedImage: UIImage?
+        public let image: UIImage
+        public let highlightedImage: UIImage?
+        
+        public init(image: UIImage, highlightedImage: UIImage? = nil) {
+            self.image = image
+            self.highlightedImage = highlightedImage
+        }
     }
 
     public typealias TapActionHandler = () -> Void
@@ -32,7 +37,7 @@ public class EasyRow {
         case subtitle(title: String, subtitle: String?)
         case value(title: String, value: String?)
         case button(title: String)
-        case userInput(value: String?, placeholder: String, TextFieldEndEditingHandler)
+        case userInput(title: String, value: String?, placeholder: String, TextFieldEndEditingHandler)
         case view(UIView, insets: UIEdgeInsets = .zero)
     }
 
