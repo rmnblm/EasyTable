@@ -48,6 +48,19 @@ public class EasyTableView: UIView {
         tableView.reloadData()
     }
     
+    public func reloadRow(identifier: String, style: EasyRow.Style, with animation: UITableView.RowAnimation = .automatic) {
+        for (i, section) in sections.enumerated() {
+            for (j, row) in section.rows.enumerated() {
+                if row.identifier == identifier {
+                    let indexPath = IndexPath(row: j, section: i)
+                    sections[i].rows[j].style = style
+                    tableView.reloadRows(at: [indexPath], with: animation)
+                    return
+                }
+            }
+        }
+    }
+    
     private func setupView() {
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false

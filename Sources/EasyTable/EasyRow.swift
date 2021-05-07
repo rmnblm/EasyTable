@@ -18,13 +18,15 @@ public class EasyRow {
     public typealias SwitchActionHandler = (Bool) -> Void
     public typealias TextFieldEndEditingHandler = (String?) -> Void
 
+    public var identifier: String
     public var style: Style
     public var accessory: Accessory
     public var icon: Icon?
     public var action: TapActionHandler?
     public var height: CGFloat?
 
-    public init(style: Style, accessory: Accessory = .none, icon: Icon? = nil, height: CGFloat? = 56, action: TapActionHandler? = nil) {
+    public init(identifier: String? = nil, style: Style, accessory: Accessory = .none, icon: Icon? = nil, height: CGFloat? = 56, action: TapActionHandler? = nil) {
+        self.identifier = identifier ?? UUID().uuidString
         self.style = style
         self.accessory = accessory
         self.icon = icon
