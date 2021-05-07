@@ -24,7 +24,7 @@ public class EasyRow {
     public var action: TapActionHandler?
     public var height: CGFloat?
 
-    public init(style: Style, accessory: Accessory = .none, icon: Icon? = nil, action: TapActionHandler? = nil, height: CGFloat? = 56) {
+    public init(style: Style, accessory: Accessory = .none, icon: Icon? = nil, height: CGFloat? = 56, action: TapActionHandler? = nil) {
         self.style = style
         self.accessory = accessory
         self.icon = icon
