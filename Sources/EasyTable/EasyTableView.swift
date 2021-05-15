@@ -29,7 +29,7 @@ public class EasyTableView: UIView {
         return tableView
     }()
 
-    private var rowHeight: CGFloat?
+    public var defaultRowHeight: CGFloat?
 
     public override var backgroundColor: UIColor? {
         didSet { tableView.backgroundColor = backgroundColor }
@@ -133,7 +133,7 @@ extension EasyTableView: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
-        return row.height ?? rowHeight ?? UITableView.automaticDimension
+        return row.height ?? defaultRowHeight ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
