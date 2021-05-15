@@ -28,7 +28,18 @@ public class EasyTableView: UIView {
         tableView.register(EasyCellHostView.self, forCellReuseIdentifier: "EasyCellHostView")
         return tableView
     }()
-    
+
+    private var rowHeight: CGFloat?
+
+    public override var backgroundColor: UIColor? {
+        didSet { tableView.backgroundColor = backgroundColor }
+    }
+
+    public var separatorColor: UIColor? {
+        get { tableView.separatorColor }
+        set { tableView.separatorColor = newValue }
+    }
+
     public init(style: UITableView.Style = .grouped) {
         self.style = style
         super.init(frame: .zero)
@@ -122,7 +133,7 @@ extension EasyTableView: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
-        return row.height ?? UITableView.automaticDimension
+        return row.height ?? rowHeight ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
