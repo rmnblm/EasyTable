@@ -30,6 +30,7 @@ public class EasyCellView: UITableViewCell {
         else {
             label.textColor = .gray
         }
+        label.numberOfLines = 0
         return label
     }()
 
@@ -45,6 +46,7 @@ public class EasyCellView: UITableViewCell {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
+        stackView.spacing = 2.0
         return stackView
     }()
 
@@ -94,6 +96,8 @@ public class EasyCellView: UITableViewCell {
         stackViewLeadingToIconConstraint = stackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8)
         stackViewTrailingConstraint = stackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor)
         stackViewTrailingConstraint?.isActive = true
+        stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
