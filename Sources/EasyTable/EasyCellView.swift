@@ -133,10 +133,12 @@ public class EasyCellView: UITableViewCell {
         case .value(let title, let subtitle):
             titleLabel.text = title
             subtitleLabel.text = subtitle
+            subtitleLabel.textAlignment = .right
         case .subtitle(let title, let subtitle):
             stackView.axis = .vertical
             titleLabel.text = title
             subtitleLabel.text = subtitle
+            subtitleLabel.textAlignment = .left
             if subtitle == nil {
                 subtitleLabel.isHidden = true
             }
