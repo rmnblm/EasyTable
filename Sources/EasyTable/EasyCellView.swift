@@ -161,6 +161,12 @@ public class EasyCellView: UITableViewCell {
         case .disclosure:
             accessoryType = .disclosureIndicator
             stackViewTrailingConstraint?.constant = -16
+        case .info:
+            accessoryType = .detailButton
+            stackViewTrailingConstraint?.constant = -16
+        case .infoDisclosure:
+            accessoryType = .detailDisclosureButton
+            stackViewTrailingConstraint?.constant = -16
         case .toggle(let value, _):
             accessoryView = switchControl
             switchControl.isOn = value

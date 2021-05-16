@@ -46,6 +46,8 @@ public class EasyRow {
     public enum Accessory {
         case none
         case disclosure
+        case info(TapActionHandler?)
+        case infoDisclosure(TapActionHandler?)
         case toggle(value: Bool, SwitchActionHandler)
     }
 }

@@ -131,6 +131,17 @@ extension EasyTableView: UITableViewDelegate {
         sections[indexPath.section].rows[indexPath.row].action?()
     }
 
+    public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let row = sections[indexPath.section].rows[indexPath.row]
+        switch row.accessory {
+        case .info(let action),
+             .infoDisclosure(let action):
+            action?()
+        default:
+            break
+        }
+    }
+
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
         return row.height ?? defaultRowHeight ?? UITableView.automaticDimension
