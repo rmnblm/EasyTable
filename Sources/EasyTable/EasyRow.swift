@@ -46,8 +46,10 @@ public class EasyRow {
     public enum Accessory {
         case none
         case disclosure
+        case toggle(value: Bool, SwitchActionHandler)
+        #if os(iOS)
         case info(TapActionHandler?)
         case infoDisclosure(TapActionHandler?)
-        case toggle(value: Bool, SwitchActionHandler)
+        #endif
     }
 }

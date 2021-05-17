@@ -35,10 +35,12 @@ public class EasyTableView: UIView {
         didSet { tableView.backgroundColor = backgroundColor }
     }
 
+    #if os(iOS)
     public var separatorColor: UIColor? {
         get { tableView.separatorColor }
         set { tableView.separatorColor = newValue }
     }
+    #endif
 
     public init(style: UITableView.Style = .grouped) {
         self.style = style
@@ -131,6 +133,7 @@ extension EasyTableView: UITableViewDelegate {
         sections[indexPath.section].rows[indexPath.row].action?()
     }
 
+    #if os(iOS)
     public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         let row = sections[indexPath.section].rows[indexPath.row]
         switch row.accessory {
@@ -141,6 +144,7 @@ extension EasyTableView: UITableViewDelegate {
             break
         }
     }
+    #endif
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
