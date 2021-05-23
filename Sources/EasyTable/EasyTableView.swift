@@ -66,6 +66,10 @@ public class EasyTableView: UIView {
     public func reloadData() {
         tableView.reloadData()
     }
+
+    public func reloadRow(_ row: EasyRow, with animation: UITableView.RowAnimation = .automatic) {
+        reloadSection(identifier: row.identifier, with: animation)
+    }
     
     public func reloadRow(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
         for (i, section) in sections.enumerated() {
@@ -77,6 +81,10 @@ public class EasyTableView: UIView {
                 }
             }
         }
+    }
+
+    public func reloadSection(_ section: EasySection, with animation: UITableView.RowAnimation = .automatic) {
+        reloadSection(identifier: section.identifier, with: animation)
     }
 
     public func reloadSection(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
