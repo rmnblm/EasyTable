@@ -26,6 +26,7 @@ public class EasyTableView: UIView {
         tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(EasyCellView.self, forCellReuseIdentifier: "EasyCellView")
         tableView.register(EasyCellHostView.self, forCellReuseIdentifier: "EasyCellHostView")
+        tableView.register(EasyHeaderFooterHostView.self, forHeaderFooterViewReuseIdentifier: "EasyHeaderFooterHostView")
         return tableView
     }()
 
@@ -41,6 +42,11 @@ public class EasyTableView: UIView {
         set { tableView.separatorColor = newValue }
     }
     #endif
+
+    public var isScrollEnabled: Bool {
+        get { tableView.isScrollEnabled }
+        set { tableView.isScrollEnabled = newValue }
+    }
 
     public init(style: UITableView.Style = .grouped) {
         self.style = style
@@ -61,12 +67,11 @@ public class EasyTableView: UIView {
         tableView.reloadData()
     }
     
-    public func reloadRow(identifier: String, style: EasyRow.Style, with animation: UITableView.RowAnimation = .automatic) {
+    public func reloadRow(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
         for (i, section) in sections.enumerated() {
             for (j, row) in section.rows.enumerated() {
                 if row.identifier == identifier {
                     let indexPath = IndexPath(row: j, section: i)
-                    sections[i].rows[j].style = style
                     tableView.reloadRows(at: [indexPath], with: animation)
                     return
                 }
@@ -74,10 +79,9 @@ public class EasyTableView: UIView {
         }
     }
 
-    public func reloadSection(identifier: String, section: EasySection, with animation: UITableView.RowAnimation = .automatic) {
+    public func reloadSection(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
         for (i, section) in sections.enumerated() {
             if section.identifier == identifier {
-                sections[i] = section
                 tableView.reloadSections(.init(integer: i), with: animation)
                 return
             }
@@ -168,6 +172,8 @@ extension EasyTableView: UITableViewDelegate {
             return .leastNonzeroMagnitude
         case .title(_, _, let height):
             return height ?? UITableView.automaticDimension
+        case .view:
+            return UITableView.automaticDimension
         }
     }
 
@@ -178,6 +184,8 @@ extension EasyTableView: UITableViewDelegate {
             return .leastNonzeroMagnitude
         case .title(_, _, let height):
             return height ?? UITableView.automaticDimension
+        case .view:
+            return UITableView.automaticDimension
         }
     }
 
@@ -215,10 +223,36 @@ extension EasyTableView: UITableViewDataSource {
         return sections[section].rows.count
     }
 
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch sections[section].header {
+        case .view(let view, let insets):
+            guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyHeaderFooterHostView") as? EasyHeaderFooterHostView else {
+                fatalError("Did not register `EasyHeaderFooterHostView`.")
+            }
+            headerView.setView(view, insets: insets)
+            return headerView
+        default:
+            return nil
+        }
+    }
+
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch sections[section].header {
         case .title(let title, _, _):
             return title
+        default:
+            return nil
+        }
+    }
+
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        switch sections[section].footer {
+        case .view(let view, let insets):
+            guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyHeaderFooterHostView") as? EasyHeaderFooterHostView else {
+                fatalError("Did not register `EasyHeaderFooterHostView`.")
+            }
+            footerView.setView(view, insets: insets)
+            return footerView
         default:
             return nil
         }

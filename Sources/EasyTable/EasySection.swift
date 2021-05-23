@@ -3,7 +3,7 @@
 import Foundation
 import UIKit
 
-public struct EasySection {
+public class EasySection {
 
     public typealias ConfigurationHandler = (UITableViewHeaderFooterView) -> Void
 
@@ -22,5 +22,6 @@ public struct EasySection {
     public enum Style {
         case none
         case title(String, configuration: ConfigurationHandler? = nil, height: CGFloat? = nil)
+        case view(UIView, insets: UIEdgeInsets = .zero)
     }
 }
