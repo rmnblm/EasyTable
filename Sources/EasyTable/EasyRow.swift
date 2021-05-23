@@ -18,7 +18,7 @@ public class EasyRow {
     public typealias SwitchActionHandler = (Bool) -> Void
     public typealias TextFieldEndEditingHandler = (String?) -> Void
 
-    public var identifier: String
+    public let identifier: String
     public var style: Style
     public var accessory: Accessory
     public var icon: Icon?

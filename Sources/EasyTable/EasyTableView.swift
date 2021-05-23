@@ -73,6 +73,16 @@ public class EasyTableView: UIView {
             }
         }
     }
+
+    public func reloadSection(identifier: String, section: EasySection, with animation: UITableView.RowAnimation = .automatic) {
+        for (i, section) in sections.enumerated() {
+            if section.identifier == identifier {
+                sections[i] = section
+                tableView.reloadSections(.init(integer: i), with: animation)
+                return
+            }
+        }
+    }
     
     private func setupView() {
         addSubview(tableView)
@@ -152,23 +162,43 @@ extension EasyTableView: UITableViewDelegate {
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let hasHeader = sections[section].header != nil
-        return hasHeader ? UITableView.automaticDimension : .leastNonzeroMagnitude
+        guard let header = sections[section].header else { return .leastNonzeroMagnitude }
+        switch header {
+        case .none:
+            return .leastNonzeroMagnitude
+        case .title(_, _, let height):
+            return height ?? UITableView.automaticDimension
+        }
     }
 
     public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        let hasFooter = sections[section].footer != nil
-        return hasFooter ? UITableView.automaticDimension : .leastNonzeroMagnitude
+        guard let footer = sections[section].footer else { return .leastNonzeroMagnitude }
+        switch footer {
+        case .none:
+            return .leastNonzeroMagnitude
+        case .title(_, _, let height):
+            return height ?? UITableView.automaticDimension
+        }
     }
 
     public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let headerView = view as? UITableViewHeaderFooterView else { return }
-        headerView.textLabel?.font = .systemFont(ofSize: 14)
+        switch sections[section].header {
+        case .title(_, let configurationHandler, _):
+            configurationHandler?(headerView)
+        default:
+            headerView.textLabel?.font = .systemFont(ofSize: 14)
+        }
     }
 
     public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         guard let footerView = view as? UITableViewHeaderFooterView else { return }
-        footerView.textLabel?.font = .systemFont(ofSize: 13)
+        switch sections[section].header {
+        case .title(_, let configurationHandler, _):
+            configurationHandler?(footerView)
+        default:
+            footerView.textLabel?.font = .systemFont(ofSize: 13)
+        }
     }
 
     public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -186,11 +216,21 @@ extension EasyTableView: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].header
+        switch sections[section].header {
+        case .title(let title, _, _):
+            return title
+        default:
+            return nil
+        }
     }
 
     public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return sections[section].footer
+        switch sections[section].footer {
+        case .title(let title, _, _):
+            return title
+        default:
+            return nil
+        }
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
