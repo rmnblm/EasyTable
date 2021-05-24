@@ -35,7 +35,7 @@ public class EasyRow {
     }
 
     public enum Style {
-        case title(String)
+        case text(String, numberOfLines: Int = 1)
         case subtitle(title: String, subtitle: String?)
         case value(title: String, value: String?)
         case button(title: String)

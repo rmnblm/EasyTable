@@ -71,29 +71,23 @@ public class EasyCellView: UITableViewCell {
     }()
 
     private var stackViewTrailingConstraint: NSLayoutConstraint?
-    private var stackViewLeadingToIconConstraint: NSLayoutConstraint?
-    private var stackViewLeadingToContentConstraint: NSLayoutConstraint?
 
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.addSubview(iconImageView)
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor).isActive = true
-        iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor).isActive = true
-        iconImageView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8).isActive = true
-        iconImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8).isActive = true
+        let contentStack = UIStackView()
+        contentStack.axis = .horizontal
 
-        contentView.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackViewLeadingToContentConstraint = stackView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor)
-        stackViewLeadingToContentConstraint?.isActive = true
-        stackViewLeadingToIconConstraint = stackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8)
-        stackViewTrailingConstraint = stackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor)
+        contentView.addSubview(contentStack)
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
+        contentStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        stackViewTrailingConstraint = contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         stackViewTrailingConstraint?.isActive = true
-        stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        contentStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+        contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        contentStack.addArrangedSubview(iconImageView)
+        contentStack.addArrangedSubview(stackView)
+
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
 
@@ -117,13 +111,13 @@ public class EasyCellView: UITableViewCell {
         if let icon = row.icon {
             iconImageView.image = icon.image
             iconImageView.highlightedImage = icon.highlightedImage
-            stackViewLeadingToIconConstraint?.isActive = true
-            stackViewLeadingToContentConstraint?.isActive = false
+            iconImageView.isHidden = false
         }
 
         switch row.style {
-        case .title(let title):
-            titleLabel.text = title
+        case .text(let text, let numberOfLines):
+            titleLabel.text = text
+            titleLabel.numberOfLines = numberOfLines
             subtitleLabel.isHidden = true
         case .value(let title, let subtitle):
             titleLabel.text = title
@@ -157,14 +151,11 @@ public class EasyCellView: UITableViewCell {
             break
         case .disclosure:
             accessoryType = .disclosureIndicator
-            stackViewTrailingConstraint?.constant = -16
         #if os(iOS)
         case .info:
             accessoryType = .detailButton
-            stackViewTrailingConstraint?.constant = -16
         case .infoDisclosure:
             accessoryType = .detailDisclosureButton
-            stackViewTrailingConstraint?.constant = -16
         #endif
         case .toggle(let value, _):
             accessoryView = switchControl
@@ -183,8 +174,10 @@ public class EasyCellView: UITableViewCell {
 
         iconImageView.image = nil
         iconImageView.highlightedImage = nil
+        iconImageView.isHidden = true
 
         titleLabel.text = nil
+        titleLabel.numberOfLines = 1
         subtitleLabel.text = nil
         subtitleLabel.isHidden = false
 
@@ -193,9 +186,7 @@ public class EasyCellView: UITableViewCell {
 
         textField.removeFromSuperview()
 
-        stackViewTrailingConstraint?.constant = 0
-        stackViewLeadingToIconConstraint?.isActive = false
-        stackViewLeadingToContentConstraint?.isActive = true
+        stackViewTrailingConstraint?.constant = -20
     }
 
     private func didToggleSwitch() {
