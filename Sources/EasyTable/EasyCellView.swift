@@ -60,6 +60,7 @@ public class EasyCellView: UITableViewCell {
 
     private lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -79,15 +80,9 @@ public class EasyCellView: UITableViewCell {
         contentView.addSubview(iconImageView)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor).isActive = true
-        iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-
-        let iconTopAnchor = iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8)
-        iconTopAnchor.priority = .defaultLow
-        iconTopAnchor.isActive = true
-
-        let iconBottomAnchor = iconImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
-        iconBottomAnchor.priority = .defaultLow
-        iconBottomAnchor.isActive = true
+        iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor).isActive = true
+        iconImageView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8).isActive = true
+        iconImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8).isActive = true
 
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
