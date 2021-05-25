@@ -44,6 +44,8 @@ public class EasyRow {
 
         var defaultHeight: CGFloat? {
             switch self {
+                case .text(_, let numberOfLines):
+                    return numberOfLines == 1 ? 56 : nil
                 case .view: 
                     return nil
                 default:

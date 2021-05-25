@@ -170,12 +170,12 @@ extension EasyTableView: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
-        return row.height ?? defaultRowHeight ?? UITableView.automaticDimension
+        return defaultRowHeight ?? row.height ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let row = sections[indexPath.section].rows[indexPath.row]
-        return row.height ?? defaultRowHeight ?? UITableView.automaticDimension
+        return defaultRowHeight ?? row.height ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

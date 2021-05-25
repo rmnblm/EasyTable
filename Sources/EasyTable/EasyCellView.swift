@@ -83,8 +83,9 @@ public class EasyCellView: UITableViewCell {
         contentStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         stackViewTrailingConstraint = contentStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         stackViewTrailingConstraint?.isActive = true
-        contentStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        contentStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        contentStack.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor).isActive = true
+        contentStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor).isActive = true
+        contentStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         contentStack.addArrangedSubview(iconImageView)
         contentStack.addArrangedSubview(stackView)
 
