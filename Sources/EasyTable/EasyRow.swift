@@ -31,7 +31,7 @@ public class EasyRow {
         self.accessory = accessory
         self.icon = icon
         self.action = action
-        self.height = height
+        self.height = height ?? style.defaultHeight
     }
 
     public enum Style {
@@ -41,6 +41,15 @@ public class EasyRow {
         case button(title: String)
         case userInput(title: String, value: String?, placeholder: String, TextFieldEndEditingHandler)
         case view(UIView, insets: UIEdgeInsets = .zero)
+
+        var defaultHeight: CGFloat? {
+            switch self {
+                case .view: 
+                    return nil
+                default:
+                    return 56
+            }
+        }
     }
 
     public enum Accessory {
