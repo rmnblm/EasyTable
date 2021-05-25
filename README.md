@@ -5,7 +5,7 @@ Easy static tables, written in Swift.
 ## Getting Started
 
 ``` swift
-final class SettingsViewController: ViewController {
+final class ViewController: UIViewController {
 
     private lazy var easyTable = EasyTableView()
 
@@ -16,21 +16,21 @@ final class SettingsViewController: ViewController {
         
         easyTable.sections = [
             .init(
-                header: "Section 1",
+                header: .title("Section 1"),
                 rows: [
-                    .init(style: .title("Row 1"), accessory: .disclosure) { [weak self] in
+                    .init(style: .text("Row 1"), accessory: .disclosure) { [weak self] in
                         self?.navigationController?.pushViewController(ViewController(), animated: true)
                     }
                 ]
             ),
             .init(
-                header: "About",
+                header: .view(UILabel()),
                 rows: [
-                    .init(style: .title("Support")),
-                    .init(style: .title("Follow Us")),
-                    .init(style: .title("Acknowledgements"))
+                    .init(style: .text("Support")),
+                    .init(style: .text("Follow Us")),
+                    .init(style: .text("Acknowledgements"))
                 ],
-                footer: "Version 1.0"
+                footer: .title("Version 1.0")
             )
         ]
     }
