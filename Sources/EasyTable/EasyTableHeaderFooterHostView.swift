@@ -2,11 +2,11 @@
 
 import UIKit
 
-final class EasyCellHostView: UITableViewCell {
+final class EasyTableHeaderFooterHostView: UITableViewHeaderFooterView {
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        backgroundView = UIView()
     }
 
     required init?(coder: NSCoder) { nil }
@@ -20,11 +20,13 @@ final class EasyCellHostView: UITableViewCell {
         resetCell()
         contentView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
+        let bottomConstraint = view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -insets.bottom)
+        bottomConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
             view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: insets.left),
+            view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: insets.top),
             view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -insets.right),
-            view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -insets.bottom),
-            view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: insets.top)
+            bottomConstraint
         ])
     }
 

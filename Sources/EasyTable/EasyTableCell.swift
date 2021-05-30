@@ -3,11 +3,11 @@
 import UIKit
 
 protocol EasyCellDelegate: AnyObject {
-    func easyCell(_ cell: EasyCellView, didToggleSwitch isOn: Bool)
-    func easyCell(_ cell: EasyCellView, didEndEditingTextField value: String?)
+    func easyCell(_ cell: EasyTableCell, didToggleSwitch isOn: Bool)
+    func easyCell(_ cell: EasyTableCell, didEndEditingTextField value: String?)
 }
 
-public class EasyCellView: UITableViewCell {
+public class EasyTableCell: UITableViewCell {
 
     weak var delegate: EasyCellDelegate?
 
@@ -144,7 +144,7 @@ public class EasyCellView: UITableViewCell {
             textField.placeholder = placeholder
             textField.text = value
         case .view:
-            fatalError("Should not come here because .view(UIView) is handled by EasyCellHostView")
+            fatalError("Should not come here because .view(UIView) is handled by EasyTableHostCell")
         }
 
         switch row.accessory {

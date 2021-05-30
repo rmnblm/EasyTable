@@ -9,25 +9,25 @@ public protocol EasyTableSwitchControl: UIView {
 
 
 #if os(iOS)
-final class DefaultSwitchControl: UISwitch, EasyTableSwitchControl {
-    init() {
+public final class DefaultSwitchControl: UISwitch, EasyTableSwitchControl {
+    public init() {
         super.init(frame: .zero)
         addTarget(self, action: #selector(valueChanged), for: .valueChanged)
     }
     
-    required init?(coder: NSCoder) { nil }
+    public required init?(coder: NSCoder) { nil }
     
     @objc private func valueChanged() {
         didToggleSwitch?()
     }
     
-    var didToggleSwitch: (() -> Void)?
+    public var didToggleSwitch: (() -> Void)?
 }
 #else
-final class DefaultSwitchControl: UILabel, EasyTableSwitchControl {
-    var isOn: Bool = false {
+public final class DefaultSwitchControl: UILabel, EasyTableSwitchControl {
+    public var isOn: Bool = false {
         didSet { text = isOn ? "On" : "Off" } // TODO: Must be localized
     }
-    var didToggleSwitch: (() -> Void)?
+    public var didToggleSwitch: (() -> Void)?
 }
 #endif

@@ -24,9 +24,9 @@ public class EasyTableView: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.cellLayoutMarginsFollowReadableWidth = true
-        tableView.register(EasyCellView.self, forCellReuseIdentifier: "EasyCellView")
-        tableView.register(EasyCellHostView.self, forCellReuseIdentifier: "EasyCellHostView")
-        tableView.register(EasyHeaderFooterHostView.self, forHeaderFooterViewReuseIdentifier: "EasyHeaderFooterHostView")
+        tableView.register(EasyTableCell.self, forCellReuseIdentifier: "EasyTableCell")
+        tableView.register(EasyTableHostCell.self, forCellReuseIdentifier: "EasyTableHostCell")
+        tableView.register(EasyTableHeaderFooterHostView.self, forHeaderFooterViewReuseIdentifier: "EasyTableHeaderFooterHostView")
         return tableView
     }()
 
@@ -73,12 +73,9 @@ public class EasyTableView: UIView {
     
     public func reloadRow(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
         for (i, section) in sections.enumerated() {
-            for (j, row) in section.rows.enumerated() {
-                if row.identifier == identifier {
-                    let indexPath = IndexPath(row: j, section: i)
-                    tableView.reloadRows(at: [indexPath], with: animation)
-                    return
-                }
+            for (j, row) in section.rows.enumerated() where row.identifier == identifier {
+                let indexPath = IndexPath(row: j, section: i)
+                tableView.reloadRows(at: [indexPath], with: animation)
             }
         }
     }
@@ -88,11 +85,8 @@ public class EasyTableView: UIView {
     }
 
     public func reloadSection(identifier: String, with animation: UITableView.RowAnimation = .automatic) {
-        for (i, section) in sections.enumerated() {
-            if section.identifier == identifier {
-                tableView.reloadSections(.init(integer: i), with: animation)
-                return
-            }
+        for (i, section) in sections.enumerated() where section.identifier == identifier {
+            tableView.reloadSections(.init(integer: i), with: animation)
         }
     }
     
@@ -130,7 +124,7 @@ public class EasyTableView: UIView {
 }
 
 extension EasyTableView: EasyCellDelegate {
-    public func easyCell(_ cell: EasyCellView, didToggleSwitch isOn: Bool) {
+    public func easyCell(_ cell: EasyTableCell, didToggleSwitch isOn: Bool) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let row = sections[indexPath.section].rows[indexPath.row]
         if case let .toggle(_, action) = row.accessory {
@@ -139,12 +133,12 @@ extension EasyTableView: EasyCellDelegate {
         }
     }
 
-    public func easyCell(_ cell: EasyCellView, didEndEditingTextField value: String?) {
+    public func easyCell(_ cell: EasyTableCell, didEndEditingTextField value: String?) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let row = sections[indexPath.section].rows[indexPath.row]
         if case let .userInput(title, _, placeholder, action) = row.style {
             action(value)
-            row.style = .userInput(title:  title, value: value, placeholder: placeholder, action)
+            row.style = .userInput(title: title, value: value, placeholder: placeholder, action)
         }
     }
 }
@@ -223,7 +217,7 @@ extension EasyTableView: UITableViewDelegate {
     }
 
     public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        (cell as? EasyCellView)?.delegate = nil
+        (cell as? EasyTableCell)?.delegate = nil
     }
 }
 
@@ -239,8 +233,8 @@ extension EasyTableView: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch sections[section].header {
         case .view(let view, let insets):
-            guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyHeaderFooterHostView") as? EasyHeaderFooterHostView else {
-                fatalError("Did not register `EasyHeaderFooterHostView`.")
+            guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyTableHeaderFooterHostView") as? EasyTableHeaderFooterHostView else {
+                fatalError("Did not register `EasyTableHeaderFooterHostView`.")
             }
             headerView.setView(view, insets: insets)
             return headerView
@@ -261,8 +255,8 @@ extension EasyTableView: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         switch sections[section].footer {
         case .view(let view, let insets):
-            guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyHeaderFooterHostView") as? EasyHeaderFooterHostView else {
-                fatalError("Did not register `EasyHeaderFooterHostView`.")
+            guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "EasyTableHeaderFooterHostView") as? EasyTableHeaderFooterHostView else {
+                fatalError("Did not register `EasyTableHeaderFooterHostView`.")
             }
             footerView.setView(view, insets: insets)
             return footerView
@@ -284,14 +278,14 @@ extension EasyTableView: UITableViewDataSource {
         let row = sections[indexPath.section].rows[indexPath.row]
         switch row.style {
         case .view(let view, let insets):
-            guard let cellView = tableView.dequeueReusableCell(withIdentifier: "EasyCellHostView", for: indexPath) as? EasyCellHostView else {
-                fatalError("Did not register `EasyCellHostView`.")
+            guard let cellView = tableView.dequeueReusableCell(withIdentifier: "EasyTableHostCell", for: indexPath) as? EasyTableHostCell else {
+                fatalError("Did not register `EasyTableHostCell`.")
             }
             cellView.setView(view, insets: insets)
             return cellView
         default:
-            guard let cellView = tableView.dequeueReusableCell(withIdentifier: "EasyCellView", for: indexPath) as? EasyCellView else {
-                fatalError("Did not register `EasyCellView`.")
+            guard let cellView = tableView.dequeueReusableCell(withIdentifier: "EasyTableCell", for: indexPath) as? EasyTableCell else {
+                fatalError("Did not register `EasyTableCell`.")
             }
             cellView.delegate = self
             cellView.setRow(row)
