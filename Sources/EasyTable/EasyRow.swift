@@ -5,10 +5,10 @@ import UIKit
 public class EasyRow {
 
     public struct Icon {
-        public let image: UIImage
+        public let image: UIImage?
         public let highlightedImage: UIImage?
         
-        public init(image: UIImage, highlightedImage: UIImage? = nil) {
+        public init(image: UIImage?, highlightedImage: UIImage? = nil) {
             self.image = image
             self.highlightedImage = highlightedImage
         }
